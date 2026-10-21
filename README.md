@@ -72,7 +72,7 @@ The system requires **Python 3.8+** with **zero `pip install` commands**:
 1. Open your terminal or PowerShell.
 2. Navigate to the project root directory:
    ```powershell
-   cd d:\rahul\flight_management_system
+   cd d:flight_management_system
    ```
 3. Run the application:
    ```powershell
