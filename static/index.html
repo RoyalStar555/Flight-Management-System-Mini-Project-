@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroStructures™ | Enterprise Flight Reservation & Airport Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top System Header -->
+    <header class="executive-header">
+        <div class="header-inner container">
+            <div class="brand-group">
+                <div class="brand-logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">AeroStructures<span class="brand-sub">™ Global Operations</span></h1>
+                    <p class="brand-caption">Data Structure-Driven Flight & Airport Management Engine</p>
+                </div>
+            </div>
+
+            <div class="academic-badge-group">
+                <span class="badge academic-badge">SPPU Computer Engineering</span>
+                <span class="badge institute-badge">Sandip Foundation SIEM, Nashik</span>
+                <div class="system-status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-label">Memory Inspector Live</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Global Alert / Exception Toast Banner -->
+    <div id="toast-banner" class="toast-banner hidden" role="alert">
+        <div class="toast-content">
+            <span id="toast-icon" class="toast-icon">⚠️</span>
+            <div id="toast-message" class="toast-message">Message text here</div>
+        </div>
+        <button id="toast-close-btn" class="toast-close" onclick="dismissToast()">&times;</button>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="app-navbar container">
+        <div class="nav-links">
+            <a href="#flight-directory" class="nav-link active">Flight Directory (Array & Sort)</a>
+            <a href="#booking-section" class="nav-link">Bookings & Manifest (Linked List)</a>
+            <a href="#waitlist-section" class="nav-link">Waitlist Desk (Circular Queue)</a>
+            <a href="#pnr-section" class="nav-link">PNR Ticket Lookup (Hash Table)</a>
+            <a href="#route-section" class="nav-link">Route Network (Graph BFS)</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-outline-danger" id="nav-undo-btn" onclick="executeUndo()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                </svg>
+                Undo Last Action (Pop Stack)
+            </button>
+            <button class="btn btn-primary" onclick="refreshAllData()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
+                </svg>
+                Sync Memory
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Dual-Cockpit Workspace -->
+    <main class="app-main container">
+        <div class="dual-grid">
+            
+            <!-- LEFT COLUMN: Domain Operations -->
+            <div class="operations-column">
+                
+                <!-- 1. Flight Directory & Searching/Sorting -->
+                <section id="flight-directory" class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="ds-pill pill-array">Array / List</span>
+                            <h2 class="card-title">Flight Directory & Search Engine</h2>
+                        </div>
+                        <span class="card-meta">Linear / Binary Search & Bubble / Selection Sort</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Search & Sort Controls -->
+                        <div class="controls-toolbar">
+                            <div class="search-input-group">
+                                <input type="text" id="flight-search-input" class="form-control" placeholder="Search Flight ID (e.g. AI-101, 6E-204)...">
+                                <select id="search-method-select" class="form-control" style="max-width: 150px;">
+                                    <option value="linear">Linear Search</option>
+                                    <option value="binary">Binary Search</option>
+                                </select>
+                                <button class="btn btn-secondary" onclick="searchFlight()">Search</button>
+                            </div>
+                            <div class="sort-action-group">
+                                <span class="label-muted">Sort By:</span>
+                                <button class="btn btn-sm btn-outline" onclick="sortFlights('fare', 'bubble')">Fare (Bubble Sort)</button>
+                                <button class="btn btn-sm btn-outline" onclick="sortFlights('departure', 'selection')">Time (Selection Sort)</button>
+                                <button class="btn btn-sm btn-outline" onclick="loadFlights()">Reset Order</button>
+                            </div>
+                        </div>
+
+                        <!-- Search/Sort Benchmarks Feedback -->
+                        <div id="algo-feedback" class="algo-benchmark-card hidden">
+                            <div class="algo-title" id="algo-title">Algorithm Benchmark</div>
+                            <div class="algo-stats-grid" id="algo-stats">
+                                <!-- Dynamic algorithm metrics -->
+                            </div>
+                        </div>
+
+                        <!-- Flights Table -->
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Flight ID</th>
+                                        <th>Airline</th>
+                                        <th>Route</th>
+                                        <th>Departure</th>
+                                        <th>Ticket Fare</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="flights-table-body">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Reservation & Confirmed Manifest -->
+                <section id="booking-section" class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="ds-pill pill-linkedlist">Singly Linked List</span>
+                            <h2 class="card-title">Passenger Reservation & Manifest</h2>
+                        </div>
+                        <span class="card-meta">Dynamic Node Allocation & Sequential Pointers</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Booking Form -->
+                        <form id="booking-form" class="booking-form" onsubmit="event.preventDefault(); bookTicket();">
+                            <div class="form-row">
+                                <div class="form-group flex-2">
+                                    <label for="book-passenger-name">Passenger Full Name</label>
+                                    <input type="text" id="book-passenger-name" class="form-control" placeholder="e.g. Vikram Malhotra" required>
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label for="book-flight-id">Select Flight</label>
+                                    <select id="book-flight-id" class="form-control" required>
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label for="book-seat">Seat Preference</label>
+                                    <div class="seat-input-wrap">
+                                        <input type="text" id="book-seat" class="form-control" placeholder="AUTO or Pick Map" value="AUTO">
+                                        <button type="button" class="cabin-toggle-btn" id="btn-toggle-cabin" onclick="toggleCabinMap()" title="Choose chair on Aircraft Cabin Map">
+                                            <span id="cabin-btn-icon">💺</span>
+                                            <span id="cabin-btn-text">Cabin Map</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group action-group">
+                                    <label>&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Interactive Aircraft Cabin Seat Visualizer (Sub-Feature) -->
+                        <div id="aircraft-cabin-section" class="cabin-map-section collapsed">
+                            <div class="cabin-map-header">
+                                <div class="cabin-map-title">
+                                    <span>✈️</span>
+                                    <span>Aircraft Cabin Seat Map • Airbus A321-Neo</span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span class="cabin-selected-info" id="cabin-selected-label">Selected: AUTO (System Assigned)</span>
+                                    <button type="button" class="btn btn-sm btn-outline" style="padding:0.15rem 0.45rem; font-size:0.7rem; color:#ffffff; border-color:rgba(255,255,255,0.3);" onclick="resetCabinSeat()">Reset to AUTO</button>
+                                </div>
+                            </div>
+
+                            <!-- Legend bar -->
+                            <div class="cabin-legend-bar">
+                                <div class="legend-item"><span class="legend-swatch swatch-first"></span> <span>First Class Suite (1A-2F)</span></div>
+                                <div class="legend-item"><span class="legend-swatch swatch-biz"></span> <span>Business Recliner (3A-4F)</span></div>
+                                <div class="legend-item"><span class="legend-swatch swatch-econ"></span> <span>Economy Chair (5A-6F)</span></div>
+                                <div class="legend-item"><span class="legend-swatch swatch-occupied"></span> <span>Occupied / Booked</span></div>
+                                <div class="legend-item"><span class="legend-swatch swatch-selected"></span> <span>Your Pick</span></div>
+                            </div>
+
+                            <!-- Fuselage Body Container -->
+                            <div class="fuselage-wrapper">
+                                <div class="wing-left"></div>
+                                <div class="wing-right"></div>
+
+                                <div class="aircraft-fuselage">
+                                    <!-- Cockpit Nose Cone -->
+                                    <div class="cockpit-dome">
+                                        <div class="cockpit-windshield">
+                                            <div class="windshield-pane"></div>
+                                            <div class="windshield-pane"></div>
+                                        </div>
+                                        <div class="cockpit-title">Flight Deck / Cockpit</div>
+                                    </div>
+
+                                    <!-- Cabin Airflow Tube Rail -->
+                                    <div class="cabin-tube-rail">
+                                        <span>◀ PORT WINDOWS</span>
+                                        <span>PRESSURIZED CABIN TUBE</span>
+                                        <span>STARBOARD ▶</span>
+                                    </div>
+
+                                    <!-- ZONE 1: FIRST CLASS PRIVATE SUITES -->
+                                    <div class="cabin-zone zone-first">
+                                        <div class="zone-header-tag tag-first">
+                                            <span>👑 First Class Private Suites (Rows 1-2)</span>
+                                            <span style="font-family:var(--font-mono);">1-1 Layout</span>
+                                        </div>
+
+                                        <!-- Row 1 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-first" id="chair-1A" onclick="selectCabinSeat('1A', 'First Class Suite')">
+                                                    <span class="seat-code">1A</span>
+                                                    <span class="seat-status-pill pill-vacant-first" id="pill-1A">SUITE</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-first" id="chair-1F" onclick="selectCabinSeat('1F', 'First Class Suite')">
+                                                    <span class="seat-code">1F</span>
+                                                    <span class="seat-status-pill pill-vacant-first" id="pill-1F">SUITE</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+
+                                        <!-- Row 2 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-first" id="chair-2A" onclick="selectCabinSeat('2A', 'First Class Suite')">
+                                                    <span class="seat-code">2A</span>
+                                                    <span class="seat-status-pill pill-vacant-first" id="pill-2A">SUITE</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-first" id="chair-2F" onclick="selectCabinSeat('2F', 'First Class Suite')">
+                                                    <span class="seat-code">2F</span>
+                                                    <span class="seat-status-pill pill-vacant-first" id="pill-2F">SUITE</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Facility Bay 1: Galley & Lavatory -->
+                                    <div class="facility-bay">
+                                        <div class="facility-box">🍽️ Galley Service</div>
+                                        <div style="font-family:var(--font-mono); color:#0284c7;">━━ Cross Aisle ━━</div>
+                                        <div class="facility-box">🚻 Lavatory A</div>
+                                    </div>
+
+                                    <!-- ZONE 2: BUSINESS CLASS EXECUTIVE RECLINERS -->
+                                    <div class="cabin-zone zone-business">
+                                        <div class="zone-header-tag tag-biz">
+                                            <span>💼 Business Class Executive Recliners (Rows 3-4)</span>
+                                            <span style="font-family:var(--font-mono);">2-2 Layout</span>
+                                        </div>
+
+                                        <!-- Row 3 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-business" id="chair-3A" onclick="selectCabinSeat('3A', 'Business Class')">
+                                                    <span class="seat-code">3A</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-3A">BIZ</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-business" id="chair-3C" onclick="selectCabinSeat('3C', 'Business Class')">
+                                                    <span class="seat-code">3C</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-3C">BIZ</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-business" id="chair-3D" onclick="selectCabinSeat('3D', 'Business Class')">
+                                                    <span class="seat-code">3D</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-3D">BIZ</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-business" id="chair-3F" onclick="selectCabinSeat('3F', 'Business Class')">
+                                                    <span class="seat-code">3F</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-3F">BIZ</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+
+                                        <!-- Row 4 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-business" id="chair-4A" onclick="selectCabinSeat('4A', 'Business Class')">
+                                                    <span class="seat-code">4A</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-4A">BIZ</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-business" id="chair-4C" onclick="selectCabinSeat('4C', 'Business Class')">
+                                                    <span class="seat-code">4C</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-4C">BIZ</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-business" id="chair-4D" onclick="selectCabinSeat('4D', 'Business Class')">
+                                                    <span class="seat-code">4D</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-4D">BIZ</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-business" id="chair-4F" onclick="selectCabinSeat('4F', 'Business Class')">
+                                                    <span class="seat-code">4F</span>
+                                                    <span class="seat-status-pill pill-vacant-business" id="pill-4F">BIZ</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Facility Bay 2: Overwing Emergency Exit -->
+                                    <div class="facility-bay" style="background:#ecfdf5; border-color:#a7f3d0;">
+                                        <div class="facility-box" style="color:#047857;">🚪 Exit L1</div>
+                                        <div style="font-family:var(--font-mono); font-size:8px; color:#059669;">AIRBUS OVERWING EMERGENCY EXIT</div>
+                                        <div class="facility-box" style="color:#047857;">Exit R1 🚪</div>
+                                    </div>
+
+                                    <!-- ZONE 3: ECONOMY COMFORT CHAIRS -->
+                                    <div class="cabin-zone zone-economy">
+                                        <div class="zone-header-tag tag-econ">
+                                            <span>💺 Economy Comfort Chairs (Rows 5-6)</span>
+                                            <span style="font-family:var(--font-mono);">3-3 Layout</span>
+                                        </div>
+
+                                        <!-- Row 5 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5A" onclick="selectCabinSeat('5A', 'Economy Class')">
+                                                    <span class="seat-code">5A</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5A">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5B" onclick="selectCabinSeat('5B', 'Economy Class')">
+                                                    <span class="seat-code">5B</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5B">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5C" onclick="selectCabinSeat('5C', 'Economy Class')">
+                                                    <span class="seat-code">5C</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5C">ECON</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5D" onclick="selectCabinSeat('5D', 'Economy Class')">
+                                                    <span class="seat-code">5D</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5D">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5E" onclick="selectCabinSeat('5E', 'Economy Class')">
+                                                    <span class="seat-code">5E</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5E">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-5F" onclick="selectCabinSeat('5F', 'Economy Class')">
+                                                    <span class="seat-code">5F</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-5F">ECON</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+
+                                        <!-- Row 6 -->
+                                        <div class="cabin-row-grid">
+                                            <span class="oval-window-dot"></span>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6A" onclick="selectCabinSeat('6A', 'Economy Class')">
+                                                    <span class="seat-code">6A</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6A">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6B" onclick="selectCabinSeat('6B', 'Economy Class')">
+                                                    <span class="seat-code">6B</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6B">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6C" onclick="selectCabinSeat('6C', 'Economy Class')">
+                                                    <span class="seat-code">6C</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6C">ECON</span>
+                                                </button>
+                                            </div>
+                                            <div class="aisle-tube">AISLE</div>
+                                            <div class="seat-cluster">
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6D" onclick="selectCabinSeat('6D', 'Economy Class')">
+                                                    <span class="seat-code">6D</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6D">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6E" onclick="selectCabinSeat('6E', 'Economy Class')">
+                                                    <span class="seat-code">6E</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6E">ECON</span>
+                                                </button>
+                                                <button type="button" class="seat-chair chair-economy" id="chair-6F" onclick="selectCabinSeat('6F', 'Economy Class')">
+                                                    <span class="seat-code">6F</span>
+                                                    <span class="seat-status-pill pill-vacant-economy" id="pill-6F">ECON</span>
+                                                </button>
+                                            </div>
+                                            <span class="oval-window-dot"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Rear Galley & Aft Lavatories -->
+                                    <div class="facility-bay">
+                                        <div class="facility-box">🚻 Lavatory B</div>
+                                        <div style="font-family:var(--font-mono); font-size:8px; color:#475569;">AFT CABIN GALLEY</div>
+                                        <div class="facility-box">🚻 Lavatory C</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fast Cancellation Form -->
+                        <div class="cancel-strip">
+                            <span class="cancel-strip-label">Need to cancel a ticket?</span>
+                            <div class="cancel-input-row">
+                                <input type="text" id="cancel-pnr-input" class="form-control form-control-sm" placeholder="Enter PNR (e.g. PNR-101)">
+                                <button class="btn btn-sm btn-outline-danger" onclick="cancelTicket()">Unlink & Cancel</button>
+                            </div>
+                        </div>
+
+                        <!-- Confirmed Passenger Manifest Table -->
+                        <div class="manifest-header-row">
+                            <h3 class="subsection-title">Confirmed Passenger Manifest (Linked Chain)</h3>
+                            <span class="badge" id="manifest-count-badge">0 Passengers</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>PNR Number</th>
+                                        <th>Passenger Name</th>
+                                        <th>Flight Code</th>
+                                        <th>Seat</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manifest-table-body">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Passenger Waitlist & Check-in Desk -->
+                <section id="waitlist-section" class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="ds-pill pill-queue">Circular Queue (FIFO)</span>
+                            <h2 class="card-title">Check-in Waitlist Desk</h2>
+                        </div>
+                        <span class="card-meta">Fixed Capacity (Max 5) | Front & Rear Modulo Pointers</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="waitlist-grid">
+                            <div class="waitlist-controls">
+                                <p class="section-description">
+                                    When flights are full, passengers join a sequential FIFO waitlist queue. Adding past 5 triggers 
+                                    <strong>Queue Overflow</strong>; processing an empty line triggers <strong>Queue Underflow</strong>.
+                                </p>
+                                <div class="form-group">
+                                    <label for="waitlist-name">Passenger Name</label>
+                                    <input type="text" id="waitlist-name" class="form-control" placeholder="e.g. Neha Sengupta">
+                                </div>
+                                <div class="form-group">
+                                    <label for="waitlist-flight-id">Flight Target</label>
+                                    <select id="waitlist-flight-id" class="form-control">
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="btn-group-dual">
+                                    <button class="btn btn-secondary" onclick="enqueueWaitlist()">Enqueue Waitlist (+)</button>
+                                    <button class="btn btn-outline" onclick="dequeueWaitlist()">Dequeue & Confirm (-)</button>
+                                </div>
+                            </div>
+
+                            <div class="waitlist-summary-card">
+                                <div class="summary-metric">
+                                    <span class="metric-number" id="waitlist-active-count">0</span>
+                                    <span class="metric-caption">Waiting in Queue (Capacity: 5)</span>
+                                </div>
+                                <div class="queue-status-box" id="queue-status-box">
+                                    <span class="status-indicator-dot dot-ready"></span>
+                                    <span id="queue-status-text">Queue Ready</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. PNR Ticket Instant Lookup -->
+                <section id="pnr-section" class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="ds-pill pill-hash">Hash Table</span>
+                            <h2 class="card-title">Instant PNR / Ticket Verification</h2>
+                        </div>
+                        <span class="card-meta">Modulo Hashing (h = key % 7) & Separate Chaining</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="lookup-form-row">
+                            <input type="text" id="lookup-pnr-input" class="form-control" placeholder="Enter PNR to verify (e.g. PNR-101)">
+                            <button class="btn btn-primary" onclick="lookupTicket()">Hash Lookup O(1)</button>
+                        </div>
+                        <div id="lookup-result-card" class="lookup-result-card hidden">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Upgraded Airport Route Network & Graph Navigation Engine -->
+                <section id="route-section" class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="ds-pill pill-graph">Graph Engine</span>
+                            <h2 class="card-title">Airport Route Network & Flight Navigation</h2>
+                        </div>
+                        <span class="card-meta">Weighted Adjacency List • BFS, DFS, Dijkstra & Alternative Paths</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Upgraded Algorithm & Controls Toolbar -->
+                        <div class="route-selection-grid-upgraded">
+                            <div class="form-group">
+                                <label for="route-origin-select">Origin Airport</label>
+                                <select id="route-origin-select" class="form-control" onchange="renderAirportRadarGraph()"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="route-dest-select">Destination Airport</label>
+                                <select id="route-dest-select" class="form-control" onchange="renderAirportRadarGraph()"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="route-algo-select">Routing Algorithm</label>
+                                <select id="route-algo-select" class="form-control">
+                                    <option value="bfs">BFS (Fewest Connections / Stops) • O(V+E)</option>
+                                    <option value="dijkstra_dist">Dijkstra (Shortest Distance in KM) • O(V²)</option>
+                                    <option value="dijkstra_fare">Dijkstra (Cheapest Ticket Fare in ₹) • O(V²)</option>
+                                    <option value="dfs">DFS (Deep Exploration Traversal) • O(V+E)</option>
+                                    <option value="all_routes">All Alternative Routes (Backtracking)</option>
+                                </select>
+                            </div>
+                            <div class="form-group action-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-block" onclick="findRouteUpgraded()">
+                                    <span>Compute Route</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Interactive 2D Airspace Route Radar Visualizer (SVG) -->
+                        <div class="route-radar-wrapper">
+                            <div class="radar-header-strip">
+                                <div class="radar-status-dot">
+                                    <span class="pulse-dot"></span>
+                                    <span>Airspace Flight Route Network Radar</span>
+                                </div>
+                                <div class="radar-meta-hints">
+                                    <span>Click airport nodes to set origin/destination</span>
+                                </div>
+                            </div>
+                            <div class="radar-canvas-container" id="radar-canvas-container">
+                                <svg id="route-network-svg" class="route-network-svg" viewBox="0 0 800 330" preserveAspectRatio="xMidYMid meet">
+                                    <!-- Dynamic SVG edges, nodes, badges and flight trajectory flow rendered here -->
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Results Panel -->
+                        <div id="route-result-box" class="route-result-box hidden">
+                            <!-- Dynamic route metrics, legs breakdown & traversal order rendered via JS -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN: LIVE DATA STRUCTURE INSPECTOR -->
+            <aside class="inspector-column">
+                <div class="inspector-sticky-wrapper">
+                    <div class="card inspector-card">
+                        <div class="card-header inspector-header">
+                            <div>
+                                <h2 class="inspector-title">Live Memory Inspector</h2>
+                                <p class="inspector-subtitle">Real-Time Data Structure State In RAM</p>
+                            </div>
+                            <span class="badge badge-accent">Interactive Engine</span>
+                        </div>
+                        <div class="card-body inspector-body">
+
+                            <!-- Visualizer 1: Action Stack (LIFO) -->
+                            <div class="inspector-module">
+                                <div class="module-header">
+                                    <div class="module-title-group">
+                                        <span class="ds-tag">STACK (LIFO)</span>
+                                        <span class="module-title">Action History (Undo Buffer)</span>
+                                    </div>
+                                    <div class="module-controls">
+                                        <button class="btn-micro" onclick="executeUndo()">Pop (Undo)</button>
+                                        <button class="btn-micro" onclick="testStackOverflow()">Test Push</button>
+                                    </div>
+                                </div>
+                                <div class="stack-meta-info">
+                                    <span>Capacity: 5 items</span>
+                                    <span id="stack-pointer-label">Top Pointer: -1 (Empty)</span>
+                                </div>
+                                <div class="stack-visual-container" id="stack-container">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Visualizer 2: Circular Queue (FIFO) -->
+                            <div class="inspector-module">
+                                <div class="module-header">
+                                    <div class="module-title-group">
+                                        <span class="ds-tag">QUEUE (FIFO)</span>
+                                        <span class="module-title">Waitlist Buffer</span>
+                                    </div>
+                                    <div class="module-controls">
+                                        <button class="btn-micro" onclick="enqueueWaitlist()">Enqueue</button>
+                                        <button class="btn-micro" onclick="dequeueWaitlist()">Dequeue</button>
+                                    </div>
+                                </div>
+                                <div class="queue-meta-info">
+                                    <span id="queue-pointers-label">Front: 0 | Rear: -1 | Count: 0/5</span>
+                                    <span class="modulo-formula">Index: (i + 1) % 5</span>
+                                </div>
+                                <div class="queue-visual-container" id="queue-container">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Visualizer 3: Singly Linked List Nodes -->
+                            <div class="inspector-module">
+                                <div class="module-header">
+                                    <div class="module-title-group">
+                                        <span class="ds-tag">LINKED LIST</span>
+                                        <span class="module-title">Passenger Manifest Chain</span>
+                                    </div>
+                                    <span class="badge-micro" id="ll-size-label">0 Nodes</span>
+                                </div>
+                                <div class="linked-list-chain-container" id="ll-chain-container">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Visualizer 4: Hash Table Buckets -->
+                            <div class="inspector-module">
+                                <div class="module-header">
+                                    <div class="module-title-group">
+                                        <span class="ds-tag">HASH TABLE</span>
+                                        <span class="module-title">PNR Modulo Buckets (Capacity: 7)</span>
+                                    </div>
+                                    <span class="badge-micro" id="hash-load-factor">Load: 0.0</span>
+                                </div>
+                                <div class="hash-table-container" id="hash-table-container">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Visualizer 5: Route Graph Adjacency List -->
+                            <div class="inspector-module">
+                                <div class="module-header">
+                                    <div class="module-title-group">
+                                        <span class="ds-tag">GRAPH</span>
+                                        <span class="module-title">Airport Adjacency Network</span>
+                                    </div>
+                                    <span class="badge-micro" id="graph-vertex-count">8 Airports</span>
+                                </div>
+                                <div class="graph-network-container" id="graph-container">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- Executive Footer -->
+    <footer class="app-footer">
+        <div class="container footer-inner">
+            <div class="footer-left">
+                <div class="footer-title">AeroStructures™ Flight Reservation & Airport Management System</div>
+                <div class="footer-caption">Academic Year 2026–2027 | Savitribai Phule Pune University (SPPU)</div>
+            </div>
+            <div class="footer-right">
+                <div>Department of Computer Engineering</div>
+                <div class="footer-institute">Sandip Institute of Engineering & Management (SIEM), Nashik-422213</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
